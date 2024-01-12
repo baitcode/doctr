@@ -25,6 +25,8 @@ from torchvision.transforms.v2 import (
     Normalize,
     RandomGrayscale,
     RandomPerspective,
+    RandomPosterize,
+    RandomSolarize,
     RandomPhotometricDistort,
 )
 from tqdm.auto import tqdm
@@ -214,6 +216,7 @@ def main(args):
                 # Ensure we have a 90% split of white-background images
                 T.RandomApply(T.ColorInversion(), 0.9),
             ]),
+            pregenerated_filepath=os.getenv("WORDS")
         )
 
     val_loader = DataLoader(
@@ -309,12 +312,12 @@ def main(args):
                 # Ensure we have a 90% split of white-background images
                 T.RandomApply(T.ColorInversion(), 0.9),
                 RandomGrayscale(p=0.1),
-                RandomPhotometricDistort(p=0.1),
-                T.RandomApply(T.RandomShadow(), p=0.4),
                 T.RandomApply(T.GaussianNoise(mean=0, std=0.1), 0.1),
-                T.RandomApply(GaussianBlur(3), 0.3),
-                RandomPerspective(distortion_scale=0.2, p=0.3),
+                T.RandomApply(GaussianBlur(5, (0.1, 5)), 0.3),
+                T.RandomApply(RandomPosterize(4), 0.1),
+                T.RandomApply(RandomSolarize(150), 0.1),
             ]),
+            pregenerated_filepath=os.getenv("WORDS")
         )
 
     train_loader = DataLoader(

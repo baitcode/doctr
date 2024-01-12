@@ -4,6 +4,7 @@
 # See LICENSE or go to <https://opensource.org/licenses/Apache-2.0> for full license details.
 
 import random
+import itertools as it
 from typing import Any, Callable, List, Optional, Tuple, Union
 
 from PIL import Image, ImageDraw
@@ -20,6 +21,7 @@ def synthesize_text_img(
     font_family: Optional[str] = None,
     background_color: Optional[Tuple[int, int, int]] = None,
     text_color: Optional[Tuple[int, int, int]] = None,
+    underscore: bool = False
 ) -> Image:
     """Generate a synthetic text image
 
@@ -52,6 +54,12 @@ def synthesize_text_img(
     text_pos = (int(round((img_size[1] - text_w) / 2)), int(round((img_size[0] - text_h) / 2)))
     # Draw the text
     d.text(text_pos, text, font=font, fill=text_color)
+    
+    if underscore:
+        # add underscore
+        lx, ly = text_pos[0], text_pos[1] + text_h
+        d.line((lx, ly, lx + text_w, ly))
+        
     return img
 
 
@@ -109,10 +117,12 @@ class _WordGenerator(AbstractDataset):
         min_chars: int,
         max_chars: int,
         num_samples: int,
-        cache_samples: bool = False,
         font_family: Optional[Union[str, List[str]]] = None,
         img_transforms: Optional[Callable[[Any], Any]] = None,
         sample_transforms: Optional[Callable[[Any, Any], Tuple[Any, Any]]] = None,
+        pregenerated_filepath: str = "",
+        text_colors: List[Tuple[int, int, int]] = [],
+        
     ) -> None:
         self.vocab = vocab
         self.wordlen_range = (min_chars, max_chars)
@@ -129,11 +139,28 @@ class _WordGenerator(AbstractDataset):
         self.sample_transforms = sample_transforms
 
         self._data: List[Image.Image] = []
-        if cache_samples:
-            _words = [self._generate_string(*self.wordlen_range) for _ in range(num_samples)]
-            self._data = [
-                (synthesize_text_img(text, font_family=random.choice(self.font_family)), text) for text in _words
-            ]
+        
+        if not text_colors:
+            text_colors = [(0,0,0)]
+        
+        _words = []
+        
+        if pregenerated_filepath:
+            with open(pregenerated_filepath) as f:
+                _words = f.readlines()
+        
+        _words += [
+            self._generate_string(*self.wordlen_range) for _ in range(num_samples)
+        ]
+        
+        samples = []
+        
+        for text_color in text_colors:
+            for font_family in self.font_family:
+                samples += [(synthesize_text_img(text, font_family=self.font_family, text_color=text_color), text) for text in _words]
+                samples += [(synthesize_text_img(text, font_family=self.font_family, text_color=text_color, underscore=True), text) for text in _words]
+            
+        self._data = samples
 
     def _generate_string(self, min_chars: int, max_chars: int) -> str:
         num_chars = random.randint(min_chars, max_chars)
