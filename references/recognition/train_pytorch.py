@@ -192,6 +192,9 @@ def main(args):
 
     vocab = VOCABS[args.vocab]
     fonts = args.font.split(",")
+    
+    colors=[(int(color[0, 2]), int(color[2, 4]), int(color[4, 6])) for color in args.text_colors.split(",")]
+    
 
     # Load val data generator
     st = time.time()
@@ -218,7 +221,8 @@ def main(args):
                 # Ensure we have a 90% split of white-background images
                 T.RandomApply(T.ColorInversion(), 0.9),
             ]),
-            pregenerated_filepath=os.getenv("WORDS")
+            pregenerated_filepath=args.words_path,
+            text_colors=colors
         )
 
     val_loader = DataLoader(
@@ -319,7 +323,8 @@ def main(args):
                 T.RandomApply(RandomPosterize(4), 0.1),
                 T.RandomApply(RandomSolarize(150), 0.1),
             ]),
-            pregenerated_filepath=os.getenv("WORDS")
+            pregenerated_filepath=args.words_path,
+            text_colors=colors
         )
 
     train_loader = DataLoader(
@@ -449,6 +454,8 @@ def parse_args():
     parser.add_argument(
         "--font", type=str, default="FreeMono.ttf,FreeSans.ttf,FreeSerif.ttf", help="Font family to be used"
     )
+    parser.add_argument("--text-colors", type=str, default="000000")
+    parser.add_argument("--words-path", type=str, default="")
     parser.add_argument("--min-chars", type=int, default=1, help="Minimum number of characters per synthetic sample")
     parser.add_argument("--max-chars", type=int, default=12, help="Maximum number of characters per synthetic sample")
     parser.add_argument("--name", type=str, default=None, help="Name of your training experiment")
