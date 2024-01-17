@@ -193,7 +193,7 @@ def main(args):
     vocab = VOCABS[args.vocab]
     fonts = args.font.split(",")
     
-    colors=[(int(color[0, 2]), int(color[2, 4]), int(color[4, 6])) for color in args.text_colors.split(",")]
+    colors=[(int(color[0:2]), int(color[2:4]), int(color[4:6])) for color in args.text_colors.split(",")]
     
 
     # Load val data generator
