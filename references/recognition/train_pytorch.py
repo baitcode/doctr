@@ -186,6 +186,8 @@ def main(args):
     if not isinstance(args.workers, int):
         args.workers = min(16, mp.cpu_count())
 
+    print("workers: {}".format(args.workers))
+
     torch.backends.cudnn.benchmark = True
 
     vocab = VOCABS[args.vocab]
