@@ -294,11 +294,11 @@ def main(args):
                 # Augmentations
                 T.RandomApply(T.ColorInversion(), 0.1),
                 RandomGrayscale(p=0.1),
-                RandomPhotometricDistort(p=0.1),
+                # RandomPhotometricDistort(p=0.1),
                 T.RandomApply(T.RandomShadow(), p=0.4),
                 T.RandomApply(T.GaussianNoise(mean=0, std=0.1), 0.1),
                 T.RandomApply(GaussianBlur(3), 0.3),
-                RandomPerspective(distortion_scale=0.2, p=0.3),
+                # RandomPerspective(distortion_scale=0.2, p=0.3),
             ]),
         )
         if len(parts) > 1:
@@ -322,7 +322,7 @@ def main(args):
                 RandomGrayscale(p=0.1),
                 T.RandomApply(T.GaussianNoise(mean=0, std=0.1), 0.1),
                 T.RandomApply(GaussianBlur(5, (0.1, 5)), 0.3),
-                T.RandomApply(RandomPosterize(4), 0.1),
+                # T.RandomApply(RandomPosterize(4), 0.1),
                 # T.RandomApply(RandomSolarize(150), 0.1),
             ]),
             pregenerated_filepath=args.words_path,

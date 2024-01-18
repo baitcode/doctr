@@ -126,7 +126,6 @@ class _WordGenerator(AbstractDataset):
     ) -> None:
         self.vocab = vocab
         self.wordlen_range = (min_chars, max_chars)
-        self._num_samples = num_samples
         self.font_family = font_family if isinstance(font_family, list) else [font_family]  # type: ignore[list-item]
         # Validate fonts
         if isinstance(font_family, list):
@@ -152,6 +151,8 @@ class _WordGenerator(AbstractDataset):
         _words += [
             self._generate_string(*self.wordlen_range) for _ in range(num_samples)
         ]
+        
+        self._num_samples = len(_words) * len(text_color) * 2 * len(font_family)
         
         samples = []
         
