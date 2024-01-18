@@ -83,9 +83,7 @@ def encode_string(
         
         raise ValueError("some characters cannot be found in 'vocab': {} for \"{}\"".format(
             vocab ,
-            "".join(
-                filter(lambda c: c in vocab, input_string))
-            )
+            "".join(filter(lambda c: c not in vocab, input_string)))
         )
 
 
