@@ -147,7 +147,7 @@ class _WordGenerator(AbstractDataset):
         
         if pregenerated_filepath:
             with open(pregenerated_filepath) as f:
-                _words = f.readlines()
+                _words = map(lambda w: w.strip(), f.readlines())
         
         _words += [
             self._generate_string(*self.wordlen_range) for _ in range(num_samples)
