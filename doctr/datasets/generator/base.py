@@ -152,7 +152,7 @@ class _WordGenerator(AbstractDataset):
             self._generate_string(*self.wordlen_range) for _ in range(num_samples)
         ]
         
-        self._num_samples = len(_words) * len(text_color) * 2 * len(font_family)
+        self._num_samples = len(_words) * len(text_colors) * 2 * len(self.font_family)
         
         samples = []
         
