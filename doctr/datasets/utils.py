@@ -79,7 +79,7 @@ def encode_string(
         return list(map(vocab.index, input_string))
     except ValueError:
         
-        raise ValueError("some characters cannot be found in 'vocab' for \"{}\"".format("".join(filter(lambda c: c in vocab, input_string))))
+        raise ValueError("some characters cannot be found in 'vocab': {} for \"{}\"".format(vocab ,"".join(filter(lambda c: c in vocab, input_string))))
 
 
 def decode_sequence(
