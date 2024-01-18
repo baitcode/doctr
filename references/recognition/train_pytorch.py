@@ -323,7 +323,7 @@ def main(args):
                 T.RandomApply(T.GaussianNoise(mean=0, std=0.1), 0.1),
                 T.RandomApply(GaussianBlur(5, (0.1, 5)), 0.3),
                 T.RandomApply(RandomPosterize(4), 0.1),
-                T.RandomApply(RandomSolarize(150), 0.1),
+                # T.RandomApply(RandomSolarize(150), 0.1),
             ]),
             pregenerated_filepath=args.words_path,
             text_colors=colors

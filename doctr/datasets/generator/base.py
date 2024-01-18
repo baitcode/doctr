@@ -155,10 +155,11 @@ class _WordGenerator(AbstractDataset):
         
         samples = []
         
+        print("Generating samples")
         for text_color in text_colors:
-            print("Generating samples for text color {}".format(text_color))
+            print("\ttext color {}".format(text_color))
             for font_family in self.font_family:
-                print("\tfont color {}".format(font_family))
+                print("\tFont color {}".format(font_family))
                 samples += [(synthesize_text_img(text, font_family=font_family, text_color=text_color), text) for text in _words]
                 samples += [(synthesize_text_img(text, font_family=font_family, text_color=text_color, underscore=True), text) for text in _words]
             
